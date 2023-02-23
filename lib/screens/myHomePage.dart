@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-// import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:confetti/confetti.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -11,17 +11,17 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-   ConfettiController? _confettiController;
+  ConfettiController? _confettiController;
 
   @override
   void dispose() {
-     _confettiController!.dispose();
+    _confettiController!.dispose();
 
     super.dispose();
   }
 
-  // AssetsAudioPlayer player1 = AssetsAudioPlayer();
-  // AssetsAudioPlayer player2 = AssetsAudioPlayer();
+  AssetsAudioPlayer player1 = AssetsAudioPlayer();
+  AssetsAudioPlayer player2 = AssetsAudioPlayer();
 
   List<bool> isImageVisibleList1 = [
     true,
@@ -96,11 +96,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
     super.initState();
 
-    // player1.open(Audio('assets/audio/Win.mp3'),
-    // autoStart: false, showNotification: true);
+    player1.open(Audio('assets/audio/Win.mp3'),
+        autoStart: false, showNotification: true);
 
-    // player2.open(Audio('assets/audio/Lose.wav'),
-    //     autoStart: false, showNotification: true);
+    player2.open(Audio('assets/audio/Lose.wav'),
+        autoStart: false, showNotification: true);
   }
 
   @override
@@ -117,25 +117,6 @@ class _MyHomePageState extends State<MyHomePage> {
           SafeArea(
             child: Column(
               children: [
-                //Explosion Animation Widget
-                // ConfettiWidget(
-                //   confettiController: _confettiController!,
-                //   //shouldLoop: true,
-                //   blastDirection: pi / 2,
-                //   colors: const [
-                //     Colors.red,
-                //     Colors.green,
-                //     Colors.yellow,
-                //     Colors.purpleAccent,
-                //     Colors.orange
-                //   ],
-                //   numberOfParticles: 10,
-                //   gravity: .25,
-                //   blastDirectionality: BlastDirectionality.explosive,
-          
-                //   emissionFrequency: 0.025,
-                // ),
-          
                 const SizedBox(
                   height: 50,
                 ),
@@ -149,7 +130,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 const SizedBox(
                   height: 20,
                 ),
-          
                 Expanded(
                   flex: 8,
                   child: GridView.count(
@@ -158,30 +138,32 @@ class _MyHomePageState extends State<MyHomePage> {
                     children: List.generate(
                         isImageVisibleList1.length,
                         (index) => Column(
-                          children: [
-                            ConfettiWidget(
-                  confettiController: _confettiController!,
-                  //shouldLoop: true,
-                  blastDirection: pi / 2,
-                  colors: const [
-                    Colors.red,
-                    Colors.green,
-                    Colors.yellow,
-                    Colors.purpleAccent,
-                    Colors.orange
-                  ],
-                  numberOfParticles: 10,
-                  gravity: .25,
-                  blastDirectionality: BlastDirectionality.explosive,
-          
-                  emissionFrequency: 0.025,
-                ),
-                            Center(
+                              children: [
+                                ConfettiWidget(
+                                  confettiController: _confettiController!,
+                                  //shouldLoop: true,
+                                  blastDirection: pi / 2,
+                                  colors: const [
+                                    Colors.red,
+                                    Colors.green,
+                                    Colors.yellow,
+                                    Colors.purpleAccent,
+                                    Colors.orange
+                                  ],
+                                  numberOfParticles: 10,
+                                  gravity: .25,
+                                  blastDirectionality:
+                                      BlastDirectionality.explosive,
+
+                                  emissionFrequency: 0.025,
+                                ),
+                                Center(
                                   child: GestureDetector(
                                     onTap: () {
                                       setState(() {
-                                        if (numberlist1[index] % numberDiv == 0) {
-                                          // player1.play();
+                                        if (numberlist1[index] % numberDiv ==
+                                            0) {
+                                          player1.play();
                                           isImageVisibleList1[index] = false;
                                           _confettiController!.play();
                                           iconList1[index] = const Icon(
@@ -192,14 +174,14 @@ class _MyHomePageState extends State<MyHomePage> {
                                           score++;
                                           correctAnswers++;
                                         } else {
-                                          // player2.play();
+                                          player2.play();
                                           isImageVisibleList1[index] = false;
                                           iconList1[index] = const Icon(
                                             Icons.close_outlined,
                                             color: Colors.red,
                                             size: 50,
                                           );
-                                          score--;
+                                          //score--;
                                           wrongAnswers++;
                                         }
                                       });
@@ -227,8 +209,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                     ),
                                   ),
                                 ),
-                          ],
-                        )),
+                              ],
+                            )),
                   ),
                 ),
                 const SizedBox(
