@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:confetti/confetti.dart';
+import 'package:rive/rive.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -63,31 +64,30 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final numberDiv = nextNumber(min: 2, max: 6);
 
-  List<Icon> iconList1 = const [
-    Icon(Icons.check),
-    Icon(Icons.check),
-    Icon(Icons.check),
-    Icon(Icons.check),
-    Icon(Icons.check),
-    Icon(Icons.check),
-    Icon(Icons.check),
-    Icon(Icons.check),
-    Icon(Icons.check),
-    Icon(Icons.check),
-    Icon(Icons.check),
-    Icon(Icons.check),
-    Icon(Icons.check),
-    Icon(Icons.check),
-    Icon(Icons.check),
-    Icon(Icons.check)
+  List<RiveAnimation> iconList1 = const [
+    RiveAnimation.asset('assets/rive/balloonright.riv'),
+    RiveAnimation.asset('assets/rive/balloonright.riv'),
+    RiveAnimation.asset('assets/rive/balloonright.riv'),
+    RiveAnimation.asset('assets/rive/balloonright.riv'),
+    RiveAnimation.asset('assets/rive/balloonright.riv'),
+    RiveAnimation.asset('assets/rive/balloonright.riv'),
+    RiveAnimation.asset('assets/rive/balloonright.riv'),
+    RiveAnimation.asset('assets/rive/balloonright.riv'),
+    RiveAnimation.asset('assets/rive/balloonright.riv'),
+    RiveAnimation.asset('assets/rive/balloonright.riv'),
+    RiveAnimation.asset('assets/rive/balloonright.riv'),
+    RiveAnimation.asset('assets/rive/balloonright.riv'),
+    RiveAnimation.asset('assets/rive/balloonright.riv'),
+    RiveAnimation.asset('assets/rive/balloonright.riv'),
+    RiveAnimation.asset('assets/rive/balloonright.riv'),
+    RiveAnimation.asset('assets/rive/balloonright.riv')
   ].toList();
-
   int score = 0;
   int correctAnswers = 0;
   int wrongAnswers = 0;
 
   Image balloonImage = const Image(
-      fit: BoxFit.contain, image: AssetImage('assets/images/balloonGreen.png'));
+      fit: BoxFit.contain, image: AssetImage('assets/images/balloonblue.png'));
 
   @override
   void initState() {
@@ -136,27 +136,27 @@ class _MyHomePageState extends State<MyHomePage> {
                     physics: const NeverScrollableScrollPhysics(),
                     crossAxisCount: 4,
                     children: List.generate(
-                        isImageVisibleList1.length,
+                        numberlist1.length,
                         (index) => Column(
                               children: [
-                                ConfettiWidget(
-                                  confettiController: _confettiController!,
-                                  //shouldLoop: true,
-                                  blastDirection: pi / 2,
-                                  colors: const [
-                                    Colors.red,
-                                    Colors.green,
-                                    Colors.yellow,
-                                    Colors.purpleAccent,
-                                    Colors.orange
-                                  ],
-                                  numberOfParticles: 10,
-                                  gravity: .25,
-                                  blastDirectionality:
-                                      BlastDirectionality.explosive,
+                                // ConfettiWidget(
+                                //   confettiController: _confettiController!,
+                                //   //shouldLoop: true,
+                                //   blastDirection: pi / 2,
+                                //   colors: const [
+                                //     Colors.red,
+                                //     Colors.green,
+                                //     Colors.yellow,
+                                //     Colors.purpleAccent,
+                                //     Colors.orange
+                                //   ],
+                                //   numberOfParticles: 2,
+                                //   gravity: .25,
+                                //   blastDirectionality:
+                                //       BlastDirectionality.explosive,
 
-                                  emissionFrequency: 0.025,
-                                ),
+                                //   emissionFrequency: 0.025,
+                                // ),
                                 Center(
                                   child: GestureDetector(
                                     onTap: () {
@@ -165,30 +165,25 @@ class _MyHomePageState extends State<MyHomePage> {
                                             0) {
                                           player1.play();
                                           isImageVisibleList1[index] = false;
-                                          _confettiController!.play();
-                                          iconList1[index] = const Icon(
-                                            Icons.check_circle,
-                                            color: Colors.green,
-                                            size: 50,
-                                          );
+                                          // _confettiController!.play();
+
+                                          iconList1[index] =const RiveAnimation.asset(
+                                              'assets/rive/balloonright.riv');
                                           score++;
                                           correctAnswers++;
                                         } else {
                                           player2.play();
                                           isImageVisibleList1[index] = false;
-                                          iconList1[index] = const Icon(
-                                            Icons.close_outlined,
-                                            color: Colors.red,
-                                            size: 50,
-                                          );
+                                          iconList1[index] =const RiveAnimation.asset(
+                                              'assets/rive/balloonwrong.riv');
                                           //score--;
                                           wrongAnswers++;
                                         }
                                       });
                                     },
                                     child: SizedBox(
-                                      height: 75,
-                                      width: 75,
+                                      height: 80,
+                                      width: 80,
                                       child: Stack(
                                         children: [
                                           isImageVisibleList1[index]
@@ -199,7 +194,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                   child: Text(
                                                     '${numberlist1[index]}',
                                                     style: const TextStyle(
-                                                        fontSize: 30,
+                                                        fontSize: 22,
                                                         color: Colors.white),
                                                   ),
                                                 )
