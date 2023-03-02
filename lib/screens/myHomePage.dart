@@ -168,14 +168,14 @@ class _MyHomePageState extends State<MyHomePage> {
                                           // _confettiController!.play();
 
                                           iconList1[index] =const RiveAnimation.asset(
-                                              'assets/rive/balloonright.riv');
+                                              'assets/rive/balloonrightnew.riv');
                                           score++;
                                           correctAnswers++;
                                         } else {
                                           player2.play();
                                           isImageVisibleList1[index] = false;
                                           iconList1[index] =const RiveAnimation.asset(
-                                              'assets/rive/balloonwrong.riv');
+                                              'assets/rive/balloonwrongnew.riv');
                                           //score--;
                                           wrongAnswers++;
                                         }
