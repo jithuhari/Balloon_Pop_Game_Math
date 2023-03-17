@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:assets_audio_player/assets_audio_player.dart';
-import 'package:confetti/confetti.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:flutter/services.dart';
 import 'package:rive/rive.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -12,17 +12,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  ConfettiController? _confettiController;
-
-  @override
-  void dispose() {
-    _confettiController!.dispose();
-
-    super.dispose();
-  }
-
-  AssetsAudioPlayer player1 = AssetsAudioPlayer();
-  AssetsAudioPlayer player2 = AssetsAudioPlayer();
+  late AudioPlayer audioPlayer;
+  // ConfettiController? _confettiController;
 
   List<bool> isImageVisibleList1 = [
     true,
@@ -37,10 +28,6 @@ class _MyHomePageState extends State<MyHomePage> {
     true,
     true,
     true,
-    true,
-    true,
-    true,
-    true
   ];
 
   final List<int> numberlist1 = [
@@ -56,10 +43,6 @@ class _MyHomePageState extends State<MyHomePage> {
     nextNumber(min: 2, max: 30),
     nextNumber(min: 2, max: 30),
     nextNumber(min: 2, max: 30),
-    nextNumber(min: 2, max: 30),
-    nextNumber(min: 2, max: 30),
-    nextNumber(min: 2, max: 30),
-    nextNumber(min: 2, max: 30)
   ];
 
   final numberDiv = nextNumber(min: 2, max: 6);
@@ -77,10 +60,6 @@ class _MyHomePageState extends State<MyHomePage> {
     RiveAnimation.asset('assets/rive/balloonright.riv'),
     RiveAnimation.asset('assets/rive/balloonright.riv'),
     RiveAnimation.asset('assets/rive/balloonright.riv'),
-    RiveAnimation.asset('assets/rive/balloonright.riv'),
-    RiveAnimation.asset('assets/rive/balloonright.riv'),
-    RiveAnimation.asset('assets/rive/balloonright.riv'),
-    RiveAnimation.asset('assets/rive/balloonright.riv')
   ].toList();
   int score = 0;
   int correctAnswers = 0;
@@ -91,20 +70,37 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    _confettiController =
-        ConfettiController(duration: const Duration(milliseconds: 500));
+    audioPlayer = AudioPlayer();
+    // _confettiController =
+    //     ConfettiController(duration: const Duration(milliseconds: 500));
 
     super.initState();
+  }
 
-    player1.open(Audio('assets/audio/Win.mp3'),
-        autoStart: false, showNotification: true);
+  @override
+  void dispose() {
+    // _confettiController!.dispose();
+    audioPlayer.dispose();
+    super.dispose();
+  }
 
-    player2.open(Audio('assets/audio/Lose.wav'),
-        autoStart: false, showNotification: true);
+  Future<void> playSoundWin() async {
+    await audioPlayer.setAsset('assets/audio/Win.mp3');
+    await audioPlayer.play();
+  }
+
+  Future<void> playSoundLose() async {
+    await audioPlayer.setAsset('assets/audio/Lose.wav');
+    await audioPlayer.play();
   }
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+    ]);
+
     return Scaffold(
       body: Stack(
         children: [
@@ -117,9 +113,6 @@ class _MyHomePageState extends State<MyHomePage> {
           SafeArea(
             child: Column(
               children: [
-                const SizedBox(
-                  height: 50,
-                ),
                 Text(
                   'Find The Numbers Which Are Divisible By $numberDiv',
                   style: const TextStyle(
@@ -127,14 +120,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       fontWeight: FontWeight.bold,
                       color: Colors.red),
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
                 Expanded(
-                  flex: 8,
                   child: GridView.count(
                     physics: const NeverScrollableScrollPhysics(),
-                    crossAxisCount: 4,
+                    crossAxisCount: 6,
                     children: List.generate(
                         numberlist1.length,
                         (index) => Column(
@@ -163,44 +152,46 @@ class _MyHomePageState extends State<MyHomePage> {
                                       setState(() {
                                         if (numberlist1[index] % numberDiv ==
                                             0) {
-                                          player1.play();
+                                          playSoundWin();
                                           isImageVisibleList1[index] = false;
                                           // _confettiController!.play();
 
-                                          iconList1[index] =const RiveAnimation.asset(
+                                          iconList1[index] = const RiveAnimation
+                                                  .asset(
                                               'assets/rive/balloonrightnew.riv');
                                           score++;
                                           correctAnswers++;
                                         } else {
-                                          player2.play();
+                                          playSoundLose();
                                           isImageVisibleList1[index] = false;
-                                          iconList1[index] =const RiveAnimation.asset(
+                                          iconList1[index] = const RiveAnimation
+                                                  .asset(
                                               'assets/rive/balloonwrongnew.riv');
                                           //score--;
                                           wrongAnswers++;
                                         }
                                       });
                                     },
-                                    child: SizedBox(
-                                      height: 80,
-                                      width: 80,
-                                      child: Stack(
-                                        children: [
-                                          isImageVisibleList1[index]
-                                              ? balloonImage
-                                              : const Text(''),
-                                          isImageVisibleList1[index]
-                                              ? Center(
-                                                  child: Text(
-                                                    '${numberlist1[index]}',
-                                                    style: const TextStyle(
-                                                        fontSize: 22,
-                                                        color: Colors.white),
-                                                  ),
-                                                )
-                                              : iconList1[index]
-                                        ],
-                                      ),
+                                    child: Stack(
+                                      alignment: AlignmentDirectional.center,
+                                      children: [
+                                        isImageVisibleList1[index]
+                                            ? balloonImage
+                                            : SizedBox(
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    .25,
+                                                child: iconList1[index]),
+                                        isImageVisibleList1[index]
+                                            ? Text(
+                                                '${numberlist1[index]}',
+                                                style: const TextStyle(
+                                                    fontSize: 22,
+                                                    color: Colors.white),
+                                              )
+                                            : const Text('')
+                                      ],
                                     ),
                                   ),
                                 ),
@@ -228,15 +219,13 @@ class _MyHomePageState extends State<MyHomePage> {
                       fontWeight: FontWeight.w600,
                       color: Colors.red),
                 ),
-                const Spacer(),
                 Text(
                   'Your Final Score is $score',
                   style: const TextStyle(
-                      fontSize: 40,
+                      fontSize: 20,
                       fontWeight: FontWeight.w600,
                       color: Colors.white),
                 ),
-                const Spacer(),
               ],
             ),
           ),
